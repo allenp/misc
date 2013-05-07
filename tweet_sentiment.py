@@ -1,5 +1,6 @@
 import sys
 import json
+import string
 
 
 def tweet_score(tweet, sent_file):
@@ -18,13 +19,19 @@ def word_sentiment(word, sent_file):
     Check current <word> against the sentiment file
     and return sentiment score if found other wise return 0
     '''
-    if sent_file is not None and not sent_file.closed:
-        sent_file.seek(0)
+    #if sent_file is not None and not sent_file.closed:
+    sent_file.seek(0)
 
     sent = 0
+    exclude = set(string.punctuation)
+    word = ''.join(ch for ch in word if ch not in exclude)
+    word = word.lower().strip()
+
     for line in sent_file:
-        if word.lower() in line.lower():
-            sent = line.split('\t')[1]
+        (clean, score) = line.split('\t')
+        clean = clean.lower().strip()
+        if word == clean:
+            sent = score
             break
 
     return float(sent)
