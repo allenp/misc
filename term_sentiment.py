@@ -8,10 +8,27 @@ def tweet_score(tweet, sent_file):
     Calculates the sum of all recognized words in a tweet
     '''
     score = 0
+    words = []
+    scores = {}
     for word in tweet.split():
-        score += word_sentiment(word, sent_file)
+        if not is_numeric(word):
+            result = word_sentiment(word, sent_file)
+            if result is False:
+                words.append(word)
+            else:
+                score += float(result)
 
-    return score
+    scores = ((w, score) for w in words)
+
+    return scores
+
+
+def is_numeric(word):
+    try:
+        float(word)
+        return True
+    except ValueError:
+        return False
 
 
 def word_sentiment(word, sent_file):
@@ -26,15 +43,20 @@ def word_sentiment(word, sent_file):
     exclude = set(string.punctuation)
     word = ''.join(ch for ch in word if ch not in exclude)
     word = word.lower().strip()
+    found = False
 
     for line in sent_file:
         (clean, score) = line.split('\t')
         clean = clean.lower().strip()
         if word == clean:
             sent = score
+            found = True
             break
 
-    return float(sent)
+    if found:
+        return float(sent)
+    else:
+        return False
 
 
 def main():
@@ -45,12 +67,23 @@ def main():
     '''
     sent_file = open(sys.argv[1], "r")
 
+    new_words = {}
     with open(sys.argv[2], "r") as tweet_file:
         for line in tweet_file:
             tweet = json.loads(line)
             if "text" in tweet:
-                score = tweet_score(tweet["text"].encode('utf-8'), sent_file)
-                print str(score)
+                scores = tweet_score(
+                    tweet["text"].encode('utf-8'),
+                    sent_file
+                )
+                for t in scores:
+                    if t[0] in new_words:
+                        new_words[t[0]] = (new_words[t[0]] + t[1]) / 2
+                    else:
+                        new_words[t[0]] = t[1]
+
+    for word in new_words:
+        print "%s %.2f" % (word, new_words[word])
 
     if not tweet_file.closed:
         tweet_file.close()
