@@ -98,8 +98,8 @@ def main():
 
     print sorted_states[0]
 
-    for e in states:
-        print "%s %.2f" % (e, states[e])
+    #for e in states:
+        #print "%s %.2f" % (e, states[e])
 
     if not tweet_file.closed:
         tweet_file.close()
