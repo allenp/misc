@@ -1,10 +1,11 @@
 Problem 1 a
 -----------
-select * from frequency where docid='10398_txt_earn';
+select count(*) from frequency where docid='10398_txt_earn';
 
 Problem 1 b
 -----------
-select term from frequency where docid='10398_txt_earn' and count = 1;
+select count(*) from frequency where docid='10398_txt_earn' and count = 1;
+
 Problem 1 c
 -----------
 select count(*) from (select term from frequency where docid='10398_txt_earn' and count=1 union select term from frequency where docid='925_txt_trade' and count=1) x;
@@ -19,7 +20,7 @@ select count(*) from (select docid, sum(count) term_count from frequency group b
 
 Problem 1 f
 -----------
-select count(*) from (select docid from frequency where term='transactions' group by docid) f1 inner join (select docid from frequency where term='world' group by docid) f2 on f1.docid = f2.docid;  
+select count(*) from (select docid from frequency where term='transactions' group by docid) f1 inner join (select docid from frequency where term='world' group by docid) f2 on f1.docid = f2.docid;
 
 Problem 2 g
 ------------
