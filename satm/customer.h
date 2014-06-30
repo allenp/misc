@@ -127,8 +127,6 @@ class Customer
             //compare the username and password till we find a match
             while(getline(input, line))
             {
-                cout << line << endl;
-
                 prev_pos = 0;
                 pos = 0;
 
@@ -158,7 +156,6 @@ class Customer
 
                     if(account == username)
                     {
-                        cout << "Account found." << endl;
                         return new Customer(account, firstname, lastname, password, balance, is_admin);
                     }
                 }
