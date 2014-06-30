@@ -42,7 +42,7 @@ int main()
         }
         else
         {
-            cout << "Invalid credentials. Please try again.";
+            cout << "Invalid credentials. Please try again." << endl;
         }
     } while(true);
 }
