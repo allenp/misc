@@ -1,11 +1,15 @@
-using namespace std;
+#ifndef TRANSFER
+#define TRANSFER "transfer.txt"
+#endif
 
-class BANKFILES
-{
-    public:
-        static const string TRANSFER = "transfer.txt";
-        static const string WITHDRAW = "widthdraw.txt";
-        static const string ACCOUNT = "account.txt";
-        static const string PASSWORD = "passwd.txt";
-        static const string DEPOSIT = "deposit.txt";
-};
+#ifndef WITHDRAW
+#define WITHDRAW "withdraw.txt"
+#endif
+
+#ifndef ACCOUNT
+#define ACCOUNT "account.txt"
+#endif
+
+#ifndef DEPOSIT
+#define DEPOSIT "deposit.txt"
+#endif

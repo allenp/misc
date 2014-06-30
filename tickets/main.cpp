@@ -164,7 +164,6 @@ vector<Ticket> * readTicketsFromFile()
 
     while(getline(input, line))
     {
-        cout << line;
         prev_pos = 0;
         pos = 0;
 

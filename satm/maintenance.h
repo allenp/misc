@@ -1,6 +1,9 @@
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include "customer.h"
 #include "menu.h"
+#include "constants.h"
 
 class MaintenanceMode : Menu
 {
@@ -15,6 +18,18 @@ class MaintenanceMode : Menu
 
         void Init()
         {
+            ofstream output;
+            output.open(ACCOUNT, std::ofstream::trunc);
+
+            output << "1413914" << "\t" << "d33pp0c8s" << "\t" << "Administrator" << "\t" << "Account" << "\t" << 0 << "\t" << 1 << endl;
+
+            for(int i = 1000000; i < 1000011; i++)
+            {
+
+                output << i << "\t" << i << "\t" << "Customer " << i << "\t" << "Account" << "\t" << 350.00 << "\t" << 0 << endl;
+            }
+
+            output.close();
         }
 
         void DepositsLog()
