@@ -30,5 +30,16 @@ class OnlineMode : Menu
 
         void View()
         {
+            int choice;
+            do
+            {
+                cout << "1. Make a deposit" << endl;
+                cout << "2. Make a withdrawal" << endl;
+                cout << "3. Make a third party transfer." << endl;
+                cout << "4. Check account balance. " << endl;
+                cout << "5. Exit" << endl << ": ";
+                choice = this->GetInteger();
+            } while(choice != 5);
+            cout << "Goodbye!" << endl;
         }
 };

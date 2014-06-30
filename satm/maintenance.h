@@ -34,13 +34,64 @@ class MaintenanceMode : Menu
             this->customer = customer;
         }
 
-        void View()
+        void LogsMenu()
         {
+            int choice;
+
             cout << "1. Deposits Log" << endl;
             cout << "2. Withdrawals Log" << endl;
             cout << "3. Third Party Transfers Log" << endl;
             cout << "4. Check Account Balances Log" << endl;
-            cout << "5. exit";
-            this->GetInteger();
+            choice = this->GetInteger();
+
+            switch(choice)
+            {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default:
+                    cout << "Invalid choice." << endl;
+            }
+        }
+
+        void View()
+        {
+            int choice;
+            do
+            {
+                if(this->customer->IsAdministrator())
+                {
+                    cout << "1. Initialize S-ATM" << endl;
+                    cout << "2. View Transaction Log" << endl;
+                    cout << "3. exit" << endl << ": ";
+
+                    choice = this->GetInteger();
+
+                    switch(choice)
+                    {
+                        case 1:
+                            Init();
+                            break;
+                        case 2:
+                            LogsMenu();
+                            break;
+                        case 3:
+                            cout << "Goodbye!" << endl;
+                            break;
+                        default:
+                            cout << "Invalid choice entered." << endl;
+                    }
+                }
+                else
+                {
+                    cout << "You are not authorized to access this function." << endl;
+                    choice = 3;
+                }
+            } while(choice != 3);
         }
 };

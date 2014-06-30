@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "maintenance.h"
 #include "online.h"
@@ -6,11 +7,15 @@ using namespace std;
 
 int main()
 {
+
     Customer * c;
     MaintenanceMode * m;
     OnlineMode * o;
+
     string username;
     string password;
+
+    int ch;
 
     do
     {

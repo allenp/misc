@@ -11,21 +11,22 @@ class Customer
         bool isAuth;
         bool isAdmin;
 
-    public:
-        Customer()
-        {
-            isAuth = false;
-            isAdmin = false;
-        }
-
-        Customer(string account, string firstname, string lastname, double balance, bool isAdmin)
+        Customer(string account, string firstname, string lastname, double balance, bool isAuth, bool isAdmin)
         {
             this->Account = account;
             this->Firstname = firstname;
             this->Lastname = lastname;
             this->Balance = balance;
             this->isAdmin = isAdmin;
-            this->isAuth = true;
+            this->isAuth = isAuth;
+            this->isAdmin = isAdmin;
+        }
+
+    public:
+        Customer()
+        {
+            isAuth = false;
+            isAdmin = false;
         }
 
         bool IsAuthenticated()
@@ -49,6 +50,13 @@ class Customer
 
         static Customer * Login(string username, string password)
         {
-            return new Customer("93454234", "Paul", "Allen", 234.45, true);
+            if(username == "1413914" && password == "d33pp0c8s")
+            {
+                return new Customer("1413914", "Administrator", "", 0.0, true, true);
+            }
+            else
+            {
+                return new Customer("234234234", "Random", "Person", 2342, true, false);
+            }
         }
 };
