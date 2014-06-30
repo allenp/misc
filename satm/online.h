@@ -63,7 +63,7 @@ class OnlineMode : Menu
             Customer * accountTo;
 
             Transfer * t;
-            cout << "Enter amount to withdraw: ";
+            cout << "Enter amount to transfer: ";
             money = this->GetDouble();
             cout << "Enter accout to send money to: ";
             account = this->GetString();
@@ -81,7 +81,7 @@ class OnlineMode : Menu
                 }
                 else
                 {
-                    cout << "Invalid account specified.";
+                    cout << "Invalid account specified." << endl;
                 }
             }
             catch(int e)
@@ -95,7 +95,7 @@ class OnlineMode : Menu
 
         void DoCheckBalance()
         {
-            cout << "Your balance is: " << customer->GetBalance();
+            cout << "Your balance is: " << customer->GetBalance() << endl;
             CheckBalance * c = new CheckBalance(customer);
             RecordTransaction(c);
         }
@@ -117,6 +117,8 @@ class OnlineMode : Menu
             int choice;
             do
             {
+                cout << "***************************************" << endl;
+                cout << "********** ACCOUNT VIEW ***************" << endl;
                 cout << "1. Make a deposit" << endl;
                 cout << "2. Make a withdrawal" << endl;
                 cout << "3. Make a third party transfer." << endl;

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 
 #include "customer.h"
 
@@ -14,7 +15,30 @@ using namespace std;
 //abstract base transaction class
 class Transaction
 {
+    protected:
+        time_t TransTime;
+
     public:
+
+        Transaction()
+        {
+            TransTime = time(0);
+        }
+
+        string GetTimestamp()
+        {
+            tm * ltm = localtime(&TransTime);
+            stringstream ss;
+
+            ss << ltm->tm_year + 1900 << "-";
+            ss << ltm->tm_mon << "-";
+            ss << ltm->tm_mday;
+            ss << " " << ltm->tm_hour;
+            ss << ":" << ltm->tm_min;
+            ss << ":" << ltm->tm_sec;
+            return ss.str();
+        }
+
         virtual string GetLogFilename() =0;
         virtual string ToLogFormat() =0;
         virtual void Complete() =0;
@@ -42,10 +66,11 @@ class Deposit : public Transaction
         string ToLogFormat()
         {
             stringstream ss;
+            ss << this->GetTimestamp() << '\t';
             ss << customer->GetAccount() << "\t";
             ss << customer->GetFirstname() << "\t";
             ss << customer->GetLastname() << "\t";
-            ss << amount;
+            ss << amount << endl;
             return ss.str();
         }
 
@@ -107,6 +132,7 @@ class Transfer : public Transaction
         string ToLogFormat()
         {
             stringstream ss;
+            ss << this->GetTimestamp() << '\t';
             ss << from->GetAccount() << "\t";
             ss << from->GetFirstname() << "\t";
             ss << from->GetLastname() << "\t";
@@ -155,10 +181,11 @@ class CheckBalance : public Transaction
         string ToLogFormat()
         {
             stringstream ss;
+            ss << this->GetTimestamp() << "\t";
             ss << customer->GetAccount() << "\t";
             ss << customer->GetFirstname() << "\t";
             ss << customer->GetLastname() << "\t";
-            ss << customer->GetBalance();
+            ss << customer->GetBalance() << endl;
             return ss.str();
         }
 };
