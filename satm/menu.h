@@ -2,6 +2,7 @@
 #define MENU_H
 
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -15,8 +16,11 @@ class Menu
         {
         }
 
-        string GetString(char * buffer, int length=80)
+        string GetString()
         {
+            string input;
+            cin >> input;
+            return input;
         }
 
         int GetInteger()
@@ -27,8 +31,12 @@ class Menu
            return number;
         }
 
-        float GetFloat()
+        float GetDouble()
         {
+            double number;
+            cin >> number;
+            this->ClearBuffer();
+            return number;
         }
 
         /*
@@ -40,8 +48,8 @@ class Menu
             const char BACKSPACE_CHAR=127;
             const char RETURN_CHAR=10;
             string password;
-            int ch;
-            ch = getchar();
+            int ch = RETURN_CHAR;
+            //ch = getchar();
 
             while( ch != RETURN_CHAR)
             {
@@ -60,7 +68,7 @@ class Menu
                     password += ch;
                     cout << '*';
                 }
-                ch = getchar();
+                //ch = getchar();
             }
             return password;
         }

@@ -1,4 +1,11 @@
+#ifndef CUSTOMER_H
+#define CUSTOMER_H
+
+#include <fstream>
 #include <string>
+#include <vector>
+#include <stdlib.h>
+
 using namespace std;
 
 class Customer
@@ -7,18 +14,19 @@ class Customer
         string Account;
         string Firstname;
         string Lastname;
+        string _password;
         double Balance;
         bool isAuth;
         bool isAdmin;
 
-        Customer(string account, string firstname, string lastname, double balance, bool isAuth, bool isAdmin)
+        Customer(string account, string firstname, string lastname, string password, double balance, bool isAdmin)
         {
             this->Account = account;
             this->Firstname = firstname;
             this->Lastname = lastname;
             this->Balance = balance;
             this->isAdmin = isAdmin;
-            this->isAuth = isAuth;
+            this->_password = password;
             this->isAdmin = isAdmin;
         }
 
@@ -27,6 +35,31 @@ class Customer
         {
             isAuth = false;
             isAdmin = false;
+        }
+
+        string GetAccount()
+        {
+            return Account;
+        }
+
+        string GetFirstname()
+        {
+            return Firstname;
+        }
+
+        string GetLastname()
+        {
+            return Lastname;
+        }
+
+        double GetBalance()
+        {
+            return Balance;
+        }
+
+        void SetBalance(double d)
+        {
+            Balance = d;
         }
 
         bool IsAuthenticated()
@@ -48,19 +81,44 @@ class Customer
             this->Balance = 0.00;
         }
 
+        bool VerifyPassword(string password)
+        {
+            isAuth = _password == password;
+            return isAuth;
+        }
+
         static Customer * Login(string username, string password)
         {
-            if(username == "1413914" && password == "d33pp0c8s")
+            Customer * c;
+
+            if(username == "1413914")
             {
-                return new Customer("1413914", "Administrator", "", 0.0, true, true);
+                //administrator account requested
+                c = new Customer("1413914", "Administrator", "Account", "d33pp0c8s", 0.0, true);
+            }
+            else
+            {
+                c = Customer::GetCustomer(username);
+                if(c == NULL)
+                {
+                    //no account found.
+                    c = new Customer("", "","", "NONE", 0.0, false);
+                }
             }
 
+            c->VerifyPassword(password);
+
+            return c;
+        }
+
+        static Customer * GetCustomer(string username)
+        {
             ifstream input;
             std::string::size_type prev_pos = 0, pos = 0;
             std::vector<string> output;
             string line;
             input.open("account.txt", std::ifstream::in);
-            string account, firstname, lastname;
+            string account, firstname, lastname, password;
             bool is_admin;
             double balance;
 
@@ -69,6 +127,8 @@ class Customer
             //compare the username and password till we find a match
             while(getline(input, line))
             {
+                cout << line << endl;
+
                 prev_pos = 0;
                 pos = 0;
 
@@ -87,23 +147,24 @@ class Customer
                 //output.at(3) == lastname,
                 //output.at(4) == balance,
                 //output.at(5) == is_admin
-                if(output.size() == 6) 
+                if(output.size() == 6)
                 {
+                    account = output.at(0);
+                    password = output.at(1);
                     firstname = output.at(2);
                     lastname = output.at(3);
-                    account = output.at(0);
                     balance = atof(output.at(4).c_str());
                     is_admin = (atoi(output.at(5).c_str()) == 1);
 
-                    if(account == username && output.at(1) == password)
+                    if(account == username)
                     {
-                        return new Customer(account, firstname, lastname, balance, true, is_admin);
+                        cout << "Account found." << endl;
+                        return new Customer(account, firstname, lastname, password, balance, is_admin);
                     }
                 }
                 output.clear();
             }
-
-            //no account found. send back anonymous user
-            return new Customer("NONE", "Anonymous", "", 0.0, false, false);
         }
 };
+
+#endif
