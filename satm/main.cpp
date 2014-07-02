@@ -42,11 +42,13 @@ int main()
             {
                 m = new MaintenanceMode(c);
                 m->view();
+                delete m;
             }
             else
             {
                 o = new OnlineMode(c);
                 o->view();
+                delete o;
             }
             c->logOut();
         }
