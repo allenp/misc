@@ -50,6 +50,7 @@ class MaintenanceMode : Menu
 
             Customer * c = new Customer(account, firstname, lastname, password, money);
             c->saveBalance();
+            delete c;
         }
 
         void readLogFile(string filename)
