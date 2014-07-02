@@ -51,6 +51,7 @@ int main()
                 delete o;
             }
             c->logOut();
+            delete c;
         }
         else
         {
