@@ -52,6 +52,12 @@ class Customer
         }
 
     public:
+
+        Customer(string account, string firstname, string lastname, string password, double balance)
+        {
+            Customer(account, firstname, lastname, password, balance, false);
+        }
+
         Customer()
         {
             isAuth = false;
@@ -141,6 +147,7 @@ class Customer
             ofstream output;
             string line;
             int found;
+            bool foundOnce = false;
 
             input.open(ACCOUNT_FILE, std::ifstream::in);
             output.open(ACCOUNT_TEMPORARY_FILE, std::ofstream::trunc);
@@ -155,6 +162,7 @@ class Customer
                     //so found should be 0
                     if(found == 0)
                     {
+                        foundOnce = true;
                         line = this->toLogFormat();
                     }
                     else
@@ -166,12 +174,24 @@ class Customer
                     output << line;
                 }
 
+                //account doesnt exist?
+                //add it to the end of the file
+                if(!foundOnce && this->isValid())
+                {
+                    output << this->toLogFormat();
+                }
+
                 input.close();
                 output.close();
 
                 rename(ACCOUNT_TEMPORARY_FILE, ACCOUNT_FILE);
             }
 
+        }
+
+        bool isValid()
+        {
+            return account.size() > 0 && firstName.size() > 0 && lastName.size() > 0;
         }
 
         static Customer * login(string username, string password)

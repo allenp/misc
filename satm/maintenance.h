@@ -31,6 +31,26 @@ class MaintenanceMode : Menu
             output.close();
         }
 
+        void newAccount()
+        {
+            string firstname, lastname, password;
+            string account;
+            double money;
+
+            cout << "Enter account number: ";
+            cin >> account;
+            cout << "Enter password: ";
+            cin >> password;
+            cout << "Enter customer first name: ";
+            cin >> firstname;
+            cout << "Enter customer last name: ";
+            cin >> lastname;
+            cout << "Enter customer balance: ";
+            cin >> money;
+
+            Customer * c = new Customer(account, firstname, lastname, password, money);
+            c->saveBalance();
+        }
 
         void readLogFile(string filename)
         {
@@ -82,30 +102,39 @@ class MaintenanceMode : Menu
         {
             int choice;
 
-            cout << "1. Deposits Log" << endl;
-            cout << "2. Withdrawals Log" << endl;
-            cout << "3. Third Party Transfers Log" << endl;
-            cout << "4. Check Account Balances Log" << endl;
-            cout << "5. Create new customer account" << endl;
-            choice = this->getInteger();
-
-            switch(choice)
+            do
             {
-                case 1:
-                    depositsLog();
-                    break;
-                case 2:
-                    withdrawalLogs();
-                    break;
-                case 3:
-                    transferLogs();
-                    break;
-                case 4:
-                    checkBalancesLog();
-                    break;
-                default:
-                    cout << "Invalid choice." << endl;
-            }
+                cout << "1. Deposits Log" << endl;
+                cout << "2. Withdrawals Log" << endl;
+                cout << "3. Third Party Transfers Log" << endl;
+                cout << "4. Check Account Balances Log" << endl;
+                cout << "5. Create new customer account" << endl;
+                cout << "6. Previous Menu" << endl;
+                choice = this->getInteger();
+
+                switch(choice)
+                {
+                    case 1:
+                        depositsLog();
+                        break;
+                    case 2:
+                        withdrawalLogs();
+                        break;
+                    case 3:
+                        transferLogs();
+                        break;
+                    case 4:
+                        checkBalancesLog();
+                        break;
+                    case 5:
+                        newAccount();
+                        break;
+                    case 6:
+                        break;
+                    default:
+                        cout << "Invalid choice." << endl;
+                }
+            }while(choice != 6);
         }
 
         void view()
