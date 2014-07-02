@@ -18,6 +18,7 @@ class Transaction
 {
     protected:
         double previousBalance;
+        int amount;
         time_t TransTime;
 
     public:
@@ -74,11 +75,10 @@ class Deposit : public Transaction
 {
     protected:
         Customer * customer;
-        double amount;
         static const double fee = 10.00;
 
     public:
-        Deposit(Customer * customer, double amount)
+        Deposit(Customer * customer, int amount)
         {
             this->customer = customer;
             this->amount = amount;
@@ -122,7 +122,7 @@ class Deposit : public Transaction
 class Withdrawal : public Deposit
 {
     public:
-        Withdrawal(Customer * customer, double amount) 
+        Withdrawal(Customer * customer, int amount)
             : Deposit(customer, amount)
         {
         }
@@ -156,11 +156,10 @@ class Transfer : public Transaction
     private:
         Customer * to;
         Customer * from;
-        double amount;
         static const double fee = 30.00;
 
     public:
-        Transfer(Customer * to, Customer * from, double amount)
+        Transfer(Customer * to, Customer * from, int amount)
         {
             this->to = to;
             this->from = from;
@@ -218,7 +217,7 @@ class CheckBalance : public Transaction
         static const double fee = 0.00;
 
     public:
-        CheckBalance(Customer * customer) 
+        CheckBalance(Customer * customer)
         {
             this->customer = customer;
         }

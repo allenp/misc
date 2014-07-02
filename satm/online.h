@@ -16,7 +16,7 @@ class OnlineMode : Menu
         {
             double money;
             cout << "Enter the amount to deposit: ";
-            money = this->getDouble();
+            money = this->getMoney();
             Deposit * d;
 
             try
@@ -39,7 +39,7 @@ class OnlineMode : Menu
             double money;
             Withdrawal * w;
             cout << "Enter amount to withdraw: ";
-            money = this->getDouble();
+            money = this->getMoney();
             w = new Withdrawal(customer, money);
 
             try
@@ -64,7 +64,7 @@ class OnlineMode : Menu
 
             Transfer * t;
             cout << "Enter amount to transfer: ";
-            money = this->getDouble();
+            money = this->getMoney();
             cout << "Enter accout to send money to: ";
             account = this->getString();
 

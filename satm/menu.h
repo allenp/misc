@@ -31,11 +31,26 @@ class Menu
            return number;
         }
 
-        float getDouble()
+        int getMoney()
         {
-            double number;
-            cin >> number;
-            this->clearBuffer();
+            int number;
+            do
+            {
+                cin >> number;
+                this->clearBuffer();
+
+                if(number % 50 > 0 && number % 100 > 0)
+                {
+                    cout << "Only multiples of $50, $100, $500 and $1000 allowed" << endl;
+                    cout << "Please try again." << endl;
+                    cout << ": ";
+                }
+                else
+                {
+                    break;
+                }
+            } while(true);
+
             return number;
         }
 
