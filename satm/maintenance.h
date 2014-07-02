@@ -22,7 +22,6 @@ class MaintenanceMode : Menu
             output.open(ACCOUNT, std::ofstream::trunc);
 
             output << "1413914" << "\t" << "d33pp0c8s" << "\t" << "Administrator" << "\t" << "Account" << "\t" << 0 << "\t" << 1 << endl;
-
             for(int i = 1000000; i < 1000011; i++)
             {
 
@@ -32,21 +31,51 @@ class MaintenanceMode : Menu
             output.close();
         }
 
+
+        void readLogFile(string filename)
+        {
+            ifstream log;
+            string line;
+            log.open(filename.c_str(), std::ofstream::in);
+            if( !log.fail())
+            {
+                while(getline(log, line))
+                {
+                    cout << line << endl;
+                }
+            }
+            else
+            {
+                cout << "No log file found: " << filename;
+            }
+        }
+
         void depositsLog()
         {
+            cout << "***************** DEPOSIT LOG *************" << endl;
+            readLogFile("deposit_log.txt");
+            cout << endl << endl;
         }
 
         void withdrawalLogs()
         {
+            cout << "***************** WITHDRAWL LOG *************" << endl;
+            readLogFile("withdrawal_log.txt");
+            cout << endl << endl;
         }
 
         void transferLogs()
         {
+            cout << "***************** TRANSFER LOG *************" << endl;
+            readLogFile("transfer_log.txt");
+            cout << endl << endl;
         }
 
-        void setCustomer(Customer *customer)
+        void checkBalancesLog()
         {
-            this->customer = customer;
+            cout << "***************** CHECK BALANCES LOG *************" << endl;
+            readLogFile("balance_log.txt");
+            cout << endl << endl;
         }
 
         void logsMenu()
@@ -57,17 +86,22 @@ class MaintenanceMode : Menu
             cout << "2. Withdrawals Log" << endl;
             cout << "3. Third Party Transfers Log" << endl;
             cout << "4. Check Account Balances Log" << endl;
+            cout << "5. Create new customer account" << endl;
             choice = this->getInteger();
 
             switch(choice)
             {
                 case 1:
+                    depositsLog();
                     break;
                 case 2:
+                    withdrawalLogs();
                     break;
                 case 3:
+                    transferLogs();
                     break;
                 case 4:
+                    checkBalancesLog();
                     break;
                 default:
                     cout << "Invalid choice." << endl;
