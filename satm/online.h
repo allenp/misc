@@ -24,6 +24,7 @@ class OnlineMode : Menu
                 d = new Deposit(customer, money);
                 d->complete();
                 recordTransaction(d);
+                delete d;
             }
             catch(int e)
             {
@@ -46,6 +47,7 @@ class OnlineMode : Menu
             {
                 w->complete();
                 recordTransaction(w);
+                delete w;
             }
             catch(int e)
             {
@@ -78,6 +80,7 @@ class OnlineMode : Menu
                     t = new Transfer(customer, accountTo, money);
                     t->complete();
                     recordTransaction(t);
+                    delete t;
                 }
                 else
                 {
@@ -98,6 +101,7 @@ class OnlineMode : Menu
             cout << "Your balance is: " << customer->getBalance() << endl;
             CheckBalance * c = new CheckBalance(customer);
             recordTransaction(c);
+            delete c;
         }
 
         void recordTransaction(Transaction * transaction)
