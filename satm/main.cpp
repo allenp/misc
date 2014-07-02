@@ -24,21 +24,31 @@ int main()
         cout << "Please enter password: ";
         cin >> password;
 
-        c = Customer::Login(username, password);
-
-        if(c->IsAuthenticated())
+        try
         {
-            if(c->IsAdministrator())
+            c = Customer::login(username, password);
+        }
+        catch(int e)
+        {
+            if(e == -999)
+            {
+                cout << "Error: unable to read accounts file.";
+            }
+        }
+
+        if(c->isAuthenticated())
+        {
+            if(c->isAdministrator())
             {
                 m = new MaintenanceMode(c);
-                m->View();
+                m->view();
             }
             else
             {
                 o = new OnlineMode(c);
-                o->View();
+                o->view();
             }
-            c->LogOut();
+            c->logOut();
         }
         else
         {

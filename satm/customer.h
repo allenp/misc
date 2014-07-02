@@ -2,31 +2,52 @@
 #define CUSTOMER_H
 
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 #include <string>
 #include <vector>
 #include <stdlib.h>
 
+
+#ifndef ACCOUNT_FILE
+#define ACCOUNT_FILE "account.txt"
+#define ACCOUNT_TEMPORARY_FILE "account_temp.txt"
+#endif
+
 using namespace std;
 
+/*
+ * Class: Customer
+ * Description: Manages the customer's account information
+ * Which includes reading and writing to the accounts file
+ * for Log-in and for recording account information
+ *
+ * The file format is:
+ *
+ * account# {tab} password {tab} firstName {tab} lastName {tab} balance {tab} isAdmin
+ *
+ *
+ * the isAdmin field is used to set an account as having administrative privileges.
+ */
 class Customer
 {
     private:
-        string Account;
-        string Firstname;
-        string Lastname;
-        string _password;
-        double Balance;
+        string account;
+        string firstName;
+        string lastName;
+        string password;
+        double balance;
         bool isAuth;
         bool isAdmin;
 
         Customer(string account, string firstname, string lastname, string password, double balance, bool isAdmin)
         {
-            this->Account = account;
-            this->Firstname = firstname;
-            this->Lastname = lastname;
-            this->Balance = balance;
+            this->account = account;
+            this->firstName = firstname;
+            this->lastName = lastname;
+            this->balance = balance;
             this->isAdmin = isAdmin;
-            this->_password = password;
+            this->password = password;
             this->isAdmin = isAdmin;
         }
 
@@ -37,60 +58,130 @@ class Customer
             isAdmin = false;
         }
 
-        string GetAccount()
+        string getAccount()
         {
-            return Account;
+            return account;
         }
 
-        string GetFirstname()
+        string getAccountLastThree()
         {
-            return Firstname;
+            std::string::size_type length = 3, start = account.size() - length;
+            if(account.size() > length)
+            {
+                return account.substr(start, length);
+            }
+            else
+            {
+                return "";
+            }
         }
 
-        string GetLastname()
+        string getFirstName()
         {
-            return Lastname;
+            return firstName;
         }
 
-        double GetBalance()
+        string getLastName()
         {
-            return Balance;
+            return lastName;
         }
 
-        void SetBalance(double d)
+        double getBalance()
         {
-            Balance = d;
+            return balance;
         }
 
-        bool IsAuthenticated()
+        void setBalance(double d)
+        {
+            balance = d;
+        }
+
+        bool isAuthenticated()
         {
             return isAuth;
         }
 
-        bool IsAdministrator()
+        bool isAdministrator()
         {
             return isAuth && isAdmin;
         }
 
-        void LogOut()
+        string toLogFormat()
+        {
+            stringstream ss;
+            ss << account << '\t';
+            ss << password << '\t';
+            ss << firstName << '\t';
+            ss << lastName << '\t';
+            ss << std::fixed << std::setprecision(2) << balance << '\t';
+            ss << isAdmin << endl;
+            return ss.str();
+        }
+
+        void logOut()
         {
             this->isAuth = false;
             this->isAdmin = false;
-            this->Account = "";
-            this->Lastname = "";
-            this->Balance = 0.00;
+            this->account = "";
+            this->lastName = "";
+            this->balance = 0.00;
         }
 
-        bool VerifyPassword(string password)
+        bool verifyPassword(string password)
         {
-            isAuth = _password == password;
+            isAuth = (this->password == password);
             return isAuth;
         }
 
-        static Customer * Login(string username, string password)
+
+        //record the current customer balance back to the accounts file
+        bool saveBalance()
+        {
+            ifstream input;
+            ofstream output;
+            string line;
+            int found;
+
+            input.open(ACCOUNT_FILE, std::ifstream::in);
+            output.open(ACCOUNT_TEMPORARY_FILE, std::ofstream::trunc);
+
+            if( !input.fail() && !output.fail())
+            {
+                while(getline(input, line))
+                {
+                    found = -1;
+                    found = line.find(this->account);
+                    //the account # is the first thing on the line
+                    //so found should be 0
+                    if(found == 0)
+                    {
+                        line = this->toLogFormat();
+                    }
+                    else
+                    {
+                        //just put the line back in the file as normal;
+                        //have to add back the line break
+                        line += "\n";
+                    }
+                    output << line;
+                }
+
+                input.close();
+                output.close();
+
+                rename(ACCOUNT_TEMPORARY_FILE, ACCOUNT_FILE);
+            }
+
+        }
+
+        static Customer * login(string username, string password)
         {
             Customer * c;
 
+            /*
+             * Fail-safe in case we are unable to read the accounts file (say for instance on first initialisation)
+             * This is the default administrator.
+             */
             if(username == "1413914")
             {
                 //administrator account requested
@@ -98,7 +189,8 @@ class Customer
             }
             else
             {
-                c = Customer::GetCustomer(username);
+                //retrieve customer information from the accounts file using their username
+                c = Customer::getCustomer(username);
                 if(c == NULL)
                 {
                     //no account found.
@@ -106,61 +198,91 @@ class Customer
                 }
             }
 
-            c->VerifyPassword(password);
+            //check that the password provided is correct
+            c->verifyPassword(password);
 
             return c;
         }
 
-        static Customer * GetCustomer(string username)
+        static Customer * getCustomer(string username)
         {
             ifstream input;
             std::string::size_type prev_pos = 0, pos = 0;
             std::vector<string> output;
             string line;
-            input.open("account.txt", std::ifstream::in);
-            string account, firstname, lastname, password;
+
+
+            string account, firstName, lastName, password;
             bool is_admin;
             double balance;
+            int found;
 
-            //read the file one line at a time and copy each field
-            //into a string vector
-            //compare the username and password till we find a match
-            while(getline(input, line))
+            /*
+             * read the file one line at a time.
+             * Test each line for the username provided.
+             * If not found, skip that line and move to the next.
+             * If found. break out the line into pieces and check the username again
+             * if matches, create customer object and return it.
+             */
+            input.open(ACCOUNT_FILE, std::ifstream::in);
+            if(! input.fail())
             {
-                prev_pos = 0;
-                pos = 0;
-
-                while((pos = line.find('\t', pos)) != string::npos)
+                while(getline(input, line))
                 {
-                    string substring(line.substr(prev_pos, pos - prev_pos));
-                    output.push_back(substring);
-                    prev_pos = ++pos;
-                }
+                    found = line.find(username);
 
-                output.push_back(line.substr(prev_pos, pos - prev_pos));
-
-                //output.at(0) == account,
-                //output.at(1) == password,
-                //output.at(2) == firstname,
-                //output.at(3) == lastname,
-                //output.at(4) == balance,
-                //output.at(5) == is_admin
-                if(output.size() == 6)
-                {
-                    account = output.at(0);
-                    password = output.at(1);
-                    firstname = output.at(2);
-                    lastname = output.at(3);
-                    balance = atof(output.at(4).c_str());
-                    is_admin = (atoi(output.at(5).c_str()) == 1);
-
-                    if(account == username)
+                    if(found < 0)
                     {
-                        return new Customer(account, firstname, lastname, password, balance, is_admin);
+                        continue;
                     }
+
+                    prev_pos = 0;
+                    pos = 0;
+
+                    //split each line at the tab breaks and store
+                    //each part as a new string in the string vector
+                    //when we are done, we should have six pieces of string
+                    //for each part of the customer information
+                    while((pos = line.find('\t', pos)) != string::npos)
+                    {
+                        string substring(line.substr(prev_pos, pos - prev_pos));
+                        output.push_back(substring);
+                        prev_pos = ++pos;
+                    }
+
+                    output.push_back(line.substr(prev_pos, pos - prev_pos));
+
+                    //output.at(0) == account,
+                    //output.at(1) == password,
+                    //output.at(2) == firstname,
+                    //output.at(3) == lastname,
+                    //output.at(4) == balance,
+                    //output.at(5) == is_admin
+                    //
+                    //We expect six pieces to be there
+                    if(output.size() == 6)
+                    {
+                        account = output.at(0);
+                        password = output.at(1);
+                        firstName = output.at(2);
+                        lastName = output.at(3);
+                        balance = atof(output.at(4).c_str());
+                        is_admin = (atoi(output.at(5).c_str()) == 1);
+
+                        if(account == username)
+                        {
+                            //a match is found so return this customer to caller
+                            return new Customer(account, firstName, lastName, password, balance, is_admin);
+                        }
+                    }
+                    output.clear();
                 }
-                output.clear();
             }
+            else
+            {
+                throw -999;
+            }
+            return NULL;
         }
 };
 

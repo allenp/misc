@@ -16,7 +16,7 @@ class MaintenanceMode : Menu
             this->customer = customer;
         }
 
-        void Init()
+        void init()
         {
             ofstream output;
             output.open(ACCOUNT, std::ofstream::trunc);
@@ -32,15 +32,15 @@ class MaintenanceMode : Menu
             output.close();
         }
 
-        void DepositsLog()
+        void depositsLog()
         {
         }
 
-        void WithdrawalLogs()
+        void withdrawalLogs()
         {
         }
 
-        void TransferLogs()
+        void transferLogs()
         {
         }
 
@@ -49,7 +49,7 @@ class MaintenanceMode : Menu
             this->customer = customer;
         }
 
-        void LogsMenu()
+        void logsMenu()
         {
             int choice;
 
@@ -57,7 +57,7 @@ class MaintenanceMode : Menu
             cout << "2. Withdrawals Log" << endl;
             cout << "3. Third Party Transfers Log" << endl;
             cout << "4. Check Account Balances Log" << endl;
-            choice = this->GetInteger();
+            choice = this->getInteger();
 
             switch(choice)
             {
@@ -74,26 +74,26 @@ class MaintenanceMode : Menu
             }
         }
 
-        void View()
+        void view()
         {
             int choice;
             do
             {
-                if(this->customer->IsAdministrator())
+                if(this->customer->isAdministrator())
                 {
                     cout << "1. Initialize S-ATM" << endl;
                     cout << "2. View Transaction Log" << endl;
                     cout << "3. exit" << endl << ": ";
 
-                    choice = this->GetInteger();
+                    choice = this->getInteger();
 
                     switch(choice)
                     {
                         case 1:
-                            Init();
+                            init();
                             break;
                         case 2:
-                            LogsMenu();
+                            logsMenu();
                             break;
                         case 3:
                             cout << "Goodbye!" << endl;

@@ -12,18 +12,18 @@ class OnlineMode : Menu
             this->customer = customer;
         }
 
-        void DoDeposit()
+        void doDeposit()
         {
             double money;
             cout << "Enter the amount to deposit: ";
-            money = this->GetDouble();
+            money = this->getDouble();
             Deposit * d;
 
             try
             {
                 d = new Deposit(customer, money);
-                d->Complete();
-                RecordTransaction(d);
+                d->complete();
+                recordTransaction(d);
             }
             catch(int e)
             {
@@ -34,18 +34,18 @@ class OnlineMode : Menu
             }
         }
 
-        void DoWithdraw()
+        void doWithdraw()
         {
             double money;
             Withdrawal * w;
             cout << "Enter amount to withdraw: ";
-            money = this->GetDouble();
+            money = this->getDouble();
             w = new Withdrawal(customer, money);
 
             try
             {
-                w->Complete();
-                RecordTransaction(w);
+                w->complete();
+                recordTransaction(w);
             }
             catch(int e)
             {
@@ -56,7 +56,7 @@ class OnlineMode : Menu
             }
         }
 
-        void DoTransfer()
+        void doTransfer()
         {
             double money;
             string account;
@@ -64,11 +64,11 @@ class OnlineMode : Menu
 
             Transfer * t;
             cout << "Enter amount to transfer: ";
-            money = this->GetDouble();
+            money = this->getDouble();
             cout << "Enter accout to send money to: ";
-            account = this->GetString();
+            account = this->getString();
 
-            accountTo = Customer::GetCustomer(account);
+            accountTo = Customer::getCustomer(account);
 
             try
             {
@@ -76,8 +76,8 @@ class OnlineMode : Menu
                 {
 
                     t = new Transfer(customer, accountTo, money);
-                    t->Complete();
-                    RecordTransaction(t);
+                    t->complete();
+                    recordTransaction(t);
                 }
                 else
                 {
@@ -93,26 +93,30 @@ class OnlineMode : Menu
             }
         }
 
-        void DoCheckBalance()
+        void doCheckBalance()
         {
-            cout << "Your balance is: " << customer->GetBalance() << endl;
+            cout << "Your balance is: " << customer->getBalance() << endl;
             CheckBalance * c = new CheckBalance(customer);
-            RecordTransaction(c);
+            recordTransaction(c);
         }
 
-        void RecordTransaction(Transaction * transaction)
+        void recordTransaction(Transaction * transaction)
         {
-            //TODO: add exception handling on file write
             ofstream log_file;
-            log_file.open(transaction->GetLogFilename().c_str(), std::ofstream::app);
-            log_file << transaction->ToLogFormat();
-            log_file.close();
+            log_file.open(transaction->getLogFileName().c_str(), std::ofstream::app);
 
-            //TODO: update the customer's account balance in account.txt
-            ofstream account_file;
+            if(!log_file.fail())
+            {
+                log_file << transaction->toLogFormat();
+                log_file.close();
+            }
+            else
+            {
+                cout << "Unable to open log file: " << transaction->getLogFileName() << endl;
+            }
         }
 
-        void View()
+        void view()
         {
             int choice;
             do
@@ -124,20 +128,20 @@ class OnlineMode : Menu
                 cout << "3. Make a third party transfer." << endl;
                 cout << "4. Check account balance. " << endl;
                 cout << "5. Exit" << endl << ": ";
-                choice = this->GetInteger();
+                choice = this->getInteger();
                 switch(choice)
                 {
                     case 1:
-                        DoDeposit();
+                        doDeposit();
                         break;
                     case 2:
-                        DoWithdraw();
+                        doWithdraw();
                         break;
                     case 3:
-                        DoTransfer();
+                        doTransfer();
                         break;
                     case 4:
-                        DoCheckBalance();
+                        doCheckBalance();
                         break;
                     case 5:
                         cout << "Goodbye!" << endl;

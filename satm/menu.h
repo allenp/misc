@@ -16,26 +16,26 @@ class Menu
         {
         }
 
-        string GetString()
+        string getString()
         {
             string input;
             cin >> input;
             return input;
         }
 
-        int GetInteger()
+        int getInteger()
         {
            int number;
            cin >> number;
-           this->ClearBuffer();
+           this->clearBuffer();
            return number;
         }
 
-        float GetDouble()
+        float getDouble()
         {
             double number;
             cin >> number;
-            this->ClearBuffer();
+            this->clearBuffer();
             return number;
         }
 
@@ -43,7 +43,7 @@ class Menu
          * TODO: implement password masking routine.
          *
          */
-        string GetPassword()
+        string getPassword()
         {
             const char BACKSPACE_CHAR=127;
             const char RETURN_CHAR=10;
@@ -73,7 +73,7 @@ class Menu
             return password;
         }
 
-        void ClearBuffer()
+        void clearBuffer()
         {
             std::cin.clear();
             std::cin.ignore(256, '\n');
