@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include "constants.h"
 
 
 using namespace std;
@@ -16,11 +17,82 @@ class Movie
         int duration_min;
         string director;
         string movie_type;
-        int status;
+        int active;
 
     public:
 
-        Movie()
+        Movie(string code, string pg_rating, int duration, string director, string movie_type, int status)
         {
+            this->code = code;
+            this->pg_rating = pg_rating;
+            this->duration_min = duration;
+            this->director = director;
+            this->movie_type = movie_type;
+            this->active = status;
         }
-}
+
+        bool isValid()
+        {
+            return code.size() > 0 && title.size() > 0 && director.size() > 0;
+        }
+
+        string toLogFormat()
+        {
+            stringstream ss;
+            ss << code << '\t';
+            ss << pg_rating << '\t'; 
+            ss << duration_min << '\t';
+            ss << director << '\t';
+            ss << movie_type << '\t';
+            ss << active << endl;
+            return ss.str();
+        }
+
+        bool save()
+        {
+            ifstream input;
+            ofstream output;
+            string line;
+            int found;
+            bool foundOnce = false;
+
+            input.open(MOVIE_FILE, std::ifstream::in);
+            output.open(MOVIE_TEMPORARY_FILE, std::ofstream::trunc);
+
+            if( !input.fail() && !output.fail())
+            {
+                while(getline(input, line))
+                {
+                    found = -1;
+                    found = line.find(this->code);
+                    //the account # is the first thing on the line
+                    //so found should be 0
+                    if(found == 0)
+                    {
+                        foundOnce = true;
+                        line = this->toLogFormat();
+                    }
+                    else
+                    {
+                        //just put the line back in the file as normal;
+                        //have to add back the line break
+                        line += "\n";
+                    }
+                    output << line;
+                }
+
+                //account doesnt exist?
+                //add it to the end of the file
+                if(!foundOnce && this->isValid())
+                {
+                    output << this->toLogFormat();
+                }
+
+                input.close();
+                output.close();
+
+                rename(MOVIE_TEMPORARY_FILE, MOVIE_FILE);
+            }
+
+        }
+};

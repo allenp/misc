@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include "menu.h"
+#include "movie.h"
 
 using namespace std;
 
@@ -8,7 +9,7 @@ class WorkerMode : Menu
 {
     private:
         User * user;
-        
+
     public:
         WorkerMode(User * user)
         {
@@ -17,6 +18,22 @@ class WorkerMode : Menu
 
         void addMovie()
         {
+            string code, title, director, movie_type, pg_rating;
+            int duration, status;
+            cout << "Enter movie code: ";
+            code = this->getString();
+            cout << endl << "Enter movie title: ";
+            title = this->getString();
+            cout << endl << "Enter movie title: ";
+            director = this->getString();
+            cout << endl << "Enter duration in minutes: ";
+            duration = this->getInteger();
+            cout << endl << "Enter status (1 - active, 0 - inactive): ";
+            status = this->getInteger();
+
+            Movie * m = new Movie(code, pg_rating, duration, director, movie_type, status);
+            m->save();
+            delete m;
         }
 
         void updateMovie()

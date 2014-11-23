@@ -1,14 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
 #include "user.h"
 #include "worker.h"
 #include "customer.h"
 
 using namespace std;
 
+void init();
+
 int main()
 {
+
+    //this here for now
+    init();
+    //------
+
     User * u;
     WorkerMode * w;
     CustomerMode * c;
@@ -54,4 +62,12 @@ int main()
     {
         cout << "Invalid credentials. Please try again." << endl;
     }
+}
+
+void init()
+{
+    ofstream output;
+    output.open("login.dat", std::ofstream::trunc);
+    output << "damion" << "\t" << "password123" << "\t" << "Damion Allen"  << "\t" << 1 << endl;
+    output.close();
 }
