@@ -2,59 +2,56 @@
 #include <stdlib.h>
 #include <iostream>
 #include "user.h"
+#include "worker.h"
+#include "customer.h"
 
 using namespace std;
 
 int main()
 {
     User * u;
+    WorkerMode * w;
+    CustomerMode * c;
     string username;
     string password;
+    bool exit;
 
-    do
+    cout << "Please enter username: ";
+    cin >> username;
+    cout << "Please enter password: ";
+    cin >> password;
+
+    try
     {
-        cout << "Please enter username: ";
-        cin >> username;
-        cout << "Please enter password: ";
-        cin >> password;
-
-        try
+        u = User::login(username, password);
+    }
+    catch(int e)
+    {
+        if(e == -999)
         {
-            u = User::login(username, password);
+            cout << "Error: unable to read login file.";
         }
-        catch(int e)
-        {
-            if(e == -999)
-            {
-                cout << "Error: unable to read login file.";
-            }
-        }
+    }
 
-        if(u->isAuthenticated())
+    if(u->isAuthenticated())
+    {
+        if(u->isWorker())
         {
-            if(u->isAdministrator())
-            {
-                /*
-                w = new WorkerMode(u);
-                w->view();
-                delete w;
-                */
-            }
-            else
-            {
-                /*
-                cus = new CustomerMode(u);
-                cus->view();
-                delete cus;
-                */
-            }
-            u->logOut();
-            delete u;
+            w = new WorkerMode(u);
+            w->view();
+            delete w;
         }
         else
         {
-            cout << "Invalid credentials. Please try again." << endl;
+            c = new CustomerMode(u);
+            c->view();
+            delete c;
         }
-    } while(true);
-
+        u->logOut();
+        delete u;
+    }
+    else
+    {
+        cout << "Invalid credentials. Please try again." << endl;
+    }
 }

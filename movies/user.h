@@ -23,6 +23,7 @@ class User
         {
             this->username = username;
             this->password = password;
+            this->isAdmin = isAdmin;
         }
 
     public:
@@ -31,7 +32,7 @@ class User
             return isAuth;
         }
 
-        bool isAdministrator()
+        bool isWorker()
         {
             return isAuth && isAdmin;
         }
