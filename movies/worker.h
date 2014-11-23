@@ -31,7 +31,7 @@ class WorkerMode : Menu
             cout << endl << "Enter status (1 - active, 0 - inactive): ";
             status = this->getInteger();
 
-            Movie * m = new Movie(code, pg_rating, duration, director, movie_type, status);
+            Movie * m = new Movie(code, title, pg_rating, duration, director, movie_type, status);
             m->save();
             delete m;
         }

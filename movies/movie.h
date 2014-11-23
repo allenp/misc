@@ -21,9 +21,10 @@ class Movie
 
     public:
 
-        Movie(string code, string pg_rating, int duration, string director, string movie_type, int status)
+        Movie(string code, string title, string pg_rating, int duration, string director, string movie_type, int status)
         {
             this->code = code;
+            this->title = title;
             this->pg_rating = pg_rating;
             this->duration_min = duration;
             this->director = director;
@@ -40,6 +41,7 @@ class Movie
         {
             stringstream ss;
             ss << code << '\t';
+            ss << title << '\t';
             ss << pg_rating << '\t';
             ss << duration_min << '\t';
             ss << director << '\t';
