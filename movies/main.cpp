@@ -49,7 +49,7 @@ int main()
             w->view();
             delete w;
         }
-        else
+        else //is customer if not worker
         {
             c = new CustomerMode(u);
             c->view();

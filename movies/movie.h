@@ -40,7 +40,7 @@ class Movie
         {
             stringstream ss;
             ss << code << '\t';
-            ss << pg_rating << '\t'; 
+            ss << pg_rating << '\t';
             ss << duration_min << '\t';
             ss << director << '\t';
             ss << movie_type << '\t';
@@ -65,7 +65,7 @@ class Movie
                 {
                     found = -1;
                     found = line.find(this->code);
-                    //the account # is the first thing on the line
+                    //the movie code is the first thing on the line
                     //so found should be 0
                     if(found == 0)
                     {
@@ -81,17 +81,28 @@ class Movie
                     output << line;
                 }
 
-                //account doesnt exist?
+                //movie doesnt exist?
                 //add it to the end of the file
-                if(!foundOnce && this->isValid())
+                if(!foundOnce)
                 {
-                    output << this->toLogFormat();
+                    if(!this->isValid())
+                    {
+                        output << this->toLogFormat();
+                    }
+                    else
+                    {
+                        cout << "Movie data invalid. Will not save.";
+                    }
                 }
 
                 input.close();
                 output.close();
 
                 rename(MOVIE_TEMPORARY_FILE, MOVIE_FILE);
+            }
+            else
+            {
+                cout << "Failed to save movie.";
             }
 
         }

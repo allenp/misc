@@ -24,7 +24,7 @@ class WorkerMode : Menu
             code = this->getString();
             cout << endl << "Enter movie title: ";
             title = this->getString();
-            cout << endl << "Enter movie title: ";
+            cout << endl << "Enter director: ";
             director = this->getString();
             cout << endl << "Enter duration in minutes: ";
             duration = this->getInteger();

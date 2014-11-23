@@ -20,6 +20,7 @@ class Menu
         {
             string input;
             cin >> input;
+            this->clearBuffer();
             return input;
         }
 
