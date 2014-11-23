@@ -24,6 +24,13 @@ class Menu
             return input;
         }
 
+        string getLine()
+        {
+            string input;
+            getline(cin, input);
+            return input;
+        }
+
         int getInteger()
         {
            int number;
