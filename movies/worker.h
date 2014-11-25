@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <ctime>
 #include "menu.h"
 #include "movie.h"
 
@@ -42,6 +43,74 @@ class WorkerMode : Menu
 
         void movieSchedule()
         {
+            time_t start = time(0);
+            size_t Minute = 255;
+            tm * now;
+
+            now = localtime(&start);
+            
+            now->tm_hour = 11;
+            now->tm_sec = 0;
+            now->tm_min = 0;
+
+            stringstream ss;
+            ss << setw(2) << setfill('0') << now->tm_mday << "-";
+            ss << setw(2) << setfill('0') << now->tm_mon << "-";
+            ss << now->tm_year + 1900;
+            string filename = ss.str();
+
+            //get a movie
+            //is it active? let's schedule it.
+            //make note of the time + movie length
+            //is the time + movie length less than 12pm?
+            //if no, stop, otherwise continue.
+            //save that as new time for next film
+            //make a note of a break time
+            //
+            //save the movies to file movieschedule-dd-mm-yyyy.dat
+
+            ifstream input;
+            ofstream outfile;
+            string::size_type prev_pos = 0, pos = 0;
+            std::vector<string> bucket;
+            string line;
+            Movie * movie;
+
+            input.open(MOVIE_FILE, std::ifstream::in);
+            filename = "movieschedule-" + filename;
+            outfile.open(filename.c_str(), std::ofstream::trunc);
+            //TODO: check input and output are valid.
+            while(getline(input, line))
+            {
+                prev_pos = 0;
+                pos = 0;
+
+                while((pos = line.find('\t', pos)) != string::npos)
+                {
+                    string substring(line.substr(prev_pos, pos - prev_pos));
+                    bucket.push_back(substring);
+                    prev_pos = ++pos;
+                }
+
+                bucket.push_back(line.substr(prev_pos, pos - prev_pos));
+
+                if(bucket.size() == 7)
+                {
+                    //code, title, pg_rating, duration, director, movie_type, status
+                    movie = new Movie(bucket.at(0), bucket.at(1), bucket.at(2), atoi(bucket.at(3).c_str()),
+                            bucket.at(4), bucket.at(5), atoi(bucket.at(6).c_str()));
+                    if(movie->isActive())
+                    {
+                        start = start + (movie->getDurationMin() * Minute);
+                        //print out movie details to outfile
+                        outfile << movie->toLogFormat();
+                        now = localtime(&start);
+                    }
+                }
+                bucket.clear();
+            }
+            outfile.close();
+            input.close();
         }
 
         void buyTicket()

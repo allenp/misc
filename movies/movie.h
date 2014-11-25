@@ -21,7 +21,8 @@ class Movie
 
     public:
 
-        Movie(string code, string title, string pg_rating, int duration, string director, string movie_type, int status)
+        Movie(string code, string title, string pg_rating,
+                int duration, string director, string movie_type, int status)
         {
             this->code = code;
             this->title = title;
@@ -32,9 +33,20 @@ class Movie
             this->active = status;
         }
 
+        bool isActive()
+        {
+            return this->active > 0;
+        }
+
         bool isValid()
         {
-            return code.size() > 0 && title.size() > 0 && director.size() > 0;
+            //return code.size() > 0 && title.size() > 0 && director.size() > 0;
+            return true;
+        }
+
+        int getDurationMin()
+        {
+            return duration_min;
         }
 
         string toLogFormat()
@@ -87,7 +99,7 @@ class Movie
                 //add it to the end of the file
                 if(!foundOnce)
                 {
-                    if(!this->isValid())
+                    if(this->isValid())
                     {
                         output << this->toLogFormat();
                     }
