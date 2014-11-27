@@ -8,12 +8,18 @@
 
 using namespace std;
 
+typedef enum {
+    PG13,
+    PG16,
+    PGMA
+} pg_rating_t;
+
 class Movie
 {
     protected:
         string title;
         string code;
-        string pg_rating;
+        pg_rating_t pg_rating;
         int duration_min;
         string director;
         string movie_type;
@@ -26,7 +32,7 @@ class Movie
         {
             this->code = code;
             this->title = title;
-            this->pg_rating = pg_rating;
+            this->setPGRating(pg_rating);
             this->duration_min = duration;
             this->director = director;
             this->movie_type = movie_type;
@@ -49,12 +55,48 @@ class Movie
             return duration_min;
         }
 
+        void setPGRating(string rating)
+        {
+            if(rating == "PG13")
+            {
+                pg_rating = PG13;
+            }
+            else if(rating == "PG16")
+            {
+                pg_rating = PG16;
+            }
+            else if(rating == "PGMA")
+            {
+                pg_rating = PGMA;
+            }
+            else
+            {
+                pg_rating = PG13;
+            }
+        }
+
+        string getPGRating()
+        {
+            switch(pg_rating)
+            {
+                case PG13:
+                    return "PG13";
+                case PG16:
+                    return "PG16";
+                case PGMA:
+                    return "PGMA";
+                default:
+                    return "PG13";
+                break;
+            }
+        }
+
         string toLogFormat()
         {
             stringstream ss;
             ss << code << '\t';
             ss << title << '\t';
-            ss << pg_rating << '\t';
+            ss << getPGRating() << '\t';
             ss << duration_min << '\t';
             ss << director << '\t';
             ss << movie_type << '\t';
