@@ -104,6 +104,19 @@ class Movie
             return ss.str();
         }
 
+        string toMovieSchedule(string showTime)
+        {
+            stringstream ss;
+            ss << setw(10) << code << '\t';
+            ss << setw(60) << title << '\t';
+            ss << setw(5) << getPGRating() << '\t';
+            ss << duration_min << '\t';
+            ss << director << '\t';
+            ss << movie_type << '\t';
+            ss << showTime << endl;
+            return ss.str();
+        }
+
         bool save()
         {
             ifstream input;
